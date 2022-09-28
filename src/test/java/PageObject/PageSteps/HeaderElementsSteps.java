@@ -34,7 +34,7 @@ public final class HeaderElementsSteps {
 
     @And("Найти и открыть созданную задачу {string}")
     public static void searchCreatedTask(String projectName) {
-        searchField.setValue(getTaskTestNumber(projectName) + "\n");
+        searchTask(getTaskTestNumber(projectName));
     }
 
     public void clickMainLogo() {

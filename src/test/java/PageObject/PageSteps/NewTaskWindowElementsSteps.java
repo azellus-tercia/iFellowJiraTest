@@ -1,5 +1,6 @@
 package PageObject.PageSteps;
 
+import com.codeborne.selenide.Condition;
 import io.cucumber.java.en.And;
 
 import static PageObject.PageElements.NewTaskWindowElements.*;
@@ -7,21 +8,21 @@ import static com.codeborne.selenide.Selenide.*;
 
 public final class NewTaskWindowElementsSteps {
     public static void setTaskType(String taskType) {
-        taskTypeSelector.click();
+        taskTypeSelector.shouldBe(Condition.visible).click();
         taskTypeSelector.sendKeys(taskType + "\n");
     }
 
     public static void setTaskName(String taskName) {
-        taskThemeField.setValue(taskName);
+        taskThemeField.shouldBe(Condition.visible).setValue(taskName);
     }
 
     public static void setTaskDescription(String description) {
-        taskDescriptionField.click();
+        taskDescriptionField.shouldBe(Condition.visible).click();
         actions().sendKeys(description).perform();
     }
 
     public static void setTaskEnvironment(String environment) {
-        taskEnvironmentField.click();
+        taskEnvironmentField.shouldBe(Condition.visible).click();
         actions().sendKeys(environment).perform();
     }
 

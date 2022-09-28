@@ -33,7 +33,15 @@ public final class ProjectPageElementsSteps {
 
     public static String getNumberOfTasks() {
         String number = numberOfTasks.getText();
-        return numberOfTasks.shouldNotHave(Condition.exactText(number)).getText().substring("1 из ".length());
+        int i = 0;
+        while (i < 10) {
+            if (!numberOfTasks.getText().equals(number)) {
+                return numberOfTasks.getText().substring("1 из ".length());
+            }
+            i++;
+        }
+
+        return number;
     }
 
     @Then("Вывести общее кличество задач")
