@@ -11,10 +11,14 @@ public final class NewTaskWindowElements {
             $x("//div[@class='field-group' and contains(., 'Описание')]/descendant::iframe");
     public static final SelenideElement taskEnvironmentField =
             $x("//div[@class='field-group' and contains(., 'Окружение')]/descendant::iframe");
-    public static final SelenideElement taskFixInVersion2 =
-            $x("//select[@id='fixVersions']/descendant::option[contains(text(), 'Version 2.0')]");
-    public static final SelenideElement taskAffectedVersion2 =
-            $x("//select[@id='versions']/descendant::option[contains(text(), 'Version 2.0')]");
     public static final SelenideElement taskConnected = $x("//textarea[@id='issuelinks-issues-textarea']");
     public static final SelenideElement submitButton = $x("//input[@id='create-issue-submit']");
+
+    public static void setTaskFixInVersion(String taskFixInVersion) {
+        $x("//select[@id='fixVersions']/descendant::option[contains(text(), '" + taskFixInVersion + "')]").click();
+    }
+
+    public static void setTaskAffectedVersion(String taskAffectedVersion) {
+        $x("//select[@id='versions']/descendant::option[contains(text(), '" + taskAffectedVersion + "')]").click();
+    }
 }

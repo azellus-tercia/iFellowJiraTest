@@ -1,11 +1,10 @@
 import hooks.WebHooks;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static PageObject.PageSteps.HeaderElementsSteps.*;
 import static PageObject.PageSteps.NewTaskWindowElementsSteps.*;
-import static PageObject.PageSteps.ProfilePageElementsSteps.getDisplayedUsername;
+import static PageObject.PageSteps.ProfilePageElementsSteps.*;
 import static PageObject.PageSteps.ProjectPageElementsSteps.*;
 import static PageObject.PageSteps.TaskPageElementsSteps.*;
 import static utils.Configuration.getConfigurationValue;
@@ -20,17 +19,14 @@ public final class JiraTest extends WebHooks {
     @DisplayName("Проверка авторизации пользователя.")
     public void Test_UserIsAuthorized() {
         goToUserPage();
-
-        Assertions.assertEquals(getConfigurationValue("username"), getDisplayedUsername(),
-                "Пользователь " + getConfigurationValue("username") + " не авторизован.");
+        checkUserIsLogged(getConfigurationValue("username"));
     }
 
     @Test
     @DisplayName("Проверка перехода на проект.")
     public void Test_ProjectIsOpen() {
         openProject(PROJECT_NAME_WITH_CODE);
-
-        Assertions.assertEquals(PROJECT_NAME, getProjectName(), "Проект " + PROJECT_NAME + " не найден.");
+        checkProjectName(PROJECT_NAME);
     }
 
     @Test
@@ -39,7 +35,7 @@ public final class JiraTest extends WebHooks {
         openProject(PROJECT_NAME_WITH_CODE);
         clickTasks();
         changeFiltersTo("Все задачи");
-        System.out.println(getNumberOfTasks());
+        printNumberOfTasks();
     }
 
     @Test
@@ -47,9 +43,8 @@ public final class JiraTest extends WebHooks {
     public void Test_GetTaskStatus() {
         openProject(PROJECT_NAME_WITH_CODE);
         searchTask("TEST-21967");
-
-        Assertions.assertTrue(getTaskStatus().length() > 0, "Статус задачи не задан.");
-        Assertions.assertEquals(VERSION, getFixInVersion(), "Версия для исправления не соответствует " + VERSION);
+        checkTaskStatusIsSet();
+        checkFixInVersion(VERSION);
     }
 
     @Test
@@ -58,25 +53,25 @@ public final class JiraTest extends WebHooks {
         openProject(PROJECT_NAME_WITH_CODE);
         clickTasks();
         newTaskWithDialogue();
-        setTaskType("Ошибка");
-        setTaskName(TASK_NAME);
-        setTaskDescription("Here is a task description.");
-        setTaskFixInVersion2();
-        setTaskEnvironment("Here is some environment.");
-        setTaskAffectedVersion2();
-        setConnectedTask("TEST-21967");
+        setTaskFields("Ошибка",
+                TASK_NAME,
+                "Here is a task description.",
+                "Version 2.0",
+                "Here is some environment.",
+                "Version 2.0",
+                "TEST-21967");
         acceptAndCreateTask();
-        searchTask(getTaskTestNumber(TASK_NAME));
+        searchCreatedTask(TASK_NAME);
 
-        Assertions.assertEquals("СДЕЛАТЬ", getTaskStatus(), "Начальный статус не равен 'Сделать'.");
+        checkTaskStatus("СДЕЛАТЬ");
 
         setStatusInProgress();
-        Assertions.assertEquals("В РАБОТЕ", getChangedTaskStatus(), "Статус не равен 'В работе'.");
+        checkChangedTaskStatus("В РАБОТЕ");
 
         setStatusResolved();
-        Assertions.assertEquals("РЕШЕННЫЕ", getChangedTaskStatus(), "Статус не равен 'Решенные'.");
+        checkChangedTaskStatus("РЕШЕННЫЕ");
 
         setStatusDone();
-        Assertions.assertEquals("ГОТОВО", getChangedTaskStatus(), "Статус не равен 'Готово'.");
+        checkChangedTaskStatus("ГОТОВО");
     }
 }
