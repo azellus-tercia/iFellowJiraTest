@@ -2,6 +2,7 @@ package PageObject.PageSteps;
 
 import static PageObject.PageElements.ProjectPageElements.*;
 import com.codeborne.selenide.Condition;
+import ProjectUtils.Waiters;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import org.junit.jupiter.api.Assertions;
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 
-public final class ProjectPageElementsSteps {
+public final class ProjectPageElementsSteps implements Waiters {
     public static String getProjectName() {
         return projectName.getAttribute("title");
     }
@@ -31,17 +32,12 @@ public final class ProjectPageElementsSteps {
         $(byText(filtersType)).click();
     }
 
-    public static String getNumberOfTasks() {
-        String number = numberOfTasks.getText();
-        int i = 0;
-        while (i < 10) {
-            if (!numberOfTasks.getText().equals(number)) {
-                return numberOfTasks.getText().substring("1 из ".length());
-            }
-            i++;
-        }
+    public String waitForElementIsUpdated() {
+        return waitFor(numberOfTasks, 1000);
+    }
 
-        return number;
+    public static String getNumberOfTasks() {
+        return new ProjectPageElementsSteps().waitForElementIsUpdated().substring("1 из ".length());
     }
 
     @Then("Вывести общее кличество задач")
